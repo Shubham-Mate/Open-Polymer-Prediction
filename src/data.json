@@ -1,0 +1,38 @@
+{
+  "H": {
+    "possible_num_bonds": 1
+  },
+  "C": {
+    "possible_num_bonds": 4
+  },
+  "N": {
+    "possible_num_bonds": 3
+  },
+  "O": {
+    "possible_num_bonds": 2
+  },
+  "F": {
+    "possible_num_bonds": 1
+  },
+  "P": {
+    "possible_num_bonds": 5
+  },
+  "S": {
+    "possible_num_bonds": 6
+  },
+  "Cl": {
+    "possible_num_bonds": 1
+  },
+  "Br": {
+    "possible_num_bonds": 1
+  },
+  "I": {
+    "possible_num_bonds": 1
+  },
+  "Si": {
+    "possible_num_bonds": 4
+  },
+  "B": {
+    "possible_num_bonds": 3
+  }
+}
