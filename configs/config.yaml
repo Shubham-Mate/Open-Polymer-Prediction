@@ -1,0 +1,12 @@
+paths:
+  raw_data: data/raw
+  processed_data: data/processed
+  output_path: output
+  train_file: train.csv
+  test_file: test.csv
+
+training:
+  seed: 42
+  n_folds: 5
+  test_size: 0.2
+  metric: "accuracy"
