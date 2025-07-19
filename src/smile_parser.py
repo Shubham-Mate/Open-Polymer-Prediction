@@ -50,31 +50,73 @@ class Molecule:
             char = smiles[i]
             if char.upper() in self.elements:
                 curr_possible_bond_count = self.data[char.upper()]["possible_num_bonds"]
-                nodes.append(Node(id=element_count, element=char.upper()))
+                nodes.append(
+                    Node(
+                        id=element_count,
+                        element=char.upper(),
+                        is_part_of_aromatic_chain=char.islower(),
+                    )
+                )
                 element_count += 1
+                items_to_be_checked = []
                 if i < len(smiles) - 1:
-                    if smiles[i + 1] in BOND_TYPES:
-                        if smiles[i + 1] == Bonds.DOUBLE_BOND.value:
-                            curr_possible_bond_count -= 2
-                        elif smiles[i + 1] == Bonds.TRIPLE_BOND.value:
-                            curr_possible_bond_count -= 3
-                    else:
-                        curr_possible_bond_count -= 1
+                    items_to_be_checked.append(i + 1)
+                    if smiles[
+                        items_to_be_checked[-1]
+                    ].isnumeric() and items_to_be_checked[-1] + 1 < len(smiles):
+                        items_to_be_checked.append(items_to_be_checked[-1] + 1)
+                    if smiles[items_to_be_checked[-1]] == "(":
+                        items_to_be_checked[-1] += 1
+                        open_bracket_count = 1
+                        j = items_to_be_checked[-1]
+                        while open_bracket_count > 0 and j < len(smiles):
+                            if smiles[j] == ")":
+                                open_bracket_count -= 1
+                            elif smiles[j] == "(":
+                                open_bracket_count += 1
+                            j += 1
+                        if j < len(smiles):
+                            items_to_be_checked.append(j)
+                    elif smiles[items_to_be_checked[-1]] == ")":
+                        items_to_be_checked.pop()
 
                 if i > 0:
-                    if smiles[i - 1] in BOND_TYPES:
-                        if smiles[i - 1] == Bonds.DOUBLE_BOND.value:
-                            curr_possible_bond_count -= 2
-                        elif smiles[i - 1] == Bonds.TRIPLE_BOND.value:
-                            curr_possible_bond_count -= 3
+                    items_to_be_checked.append(i - 1)
+                    if smiles[i - 1] == ")":
+                        items_to_be_checked.pop()
+                        close_bracket_count = 1
+                        j = i - 2
+                        while close_bracket_count > 0 and j > 0 and smiles[j] != ")":
+                            if smiles[j] == "(":
+                                close_bracket_count -= 1
+                            elif smiles[j] == ")":
+                                close_bracket_count += 1
+                            j -= 1
+                        if j >= 0:
+                            items_to_be_checked.append(j)
+                    elif smiles[items_to_be_checked[-1]] == "(":
+                        while smiles[items_to_be_checked[-1]] == "(":
+                            items_to_be_checked[-1] -= 1
+
+                for item in items_to_be_checked:
+                    print(item, items_to_be_checked)
+                    if smiles[item] in BOND_TYPES:
+                        curr_possible_bond_count -= BOND_TYPES.index(smiles[item]) + 1
                     else:
                         curr_possible_bond_count -= 1
+                print(curr_possible_bond_count)
                 for j in range(curr_possible_bond_count):
-                    nodes.append(Node(element="H", id=element_count))
+                    nodes.append(
+                        Node(
+                            element="H",
+                            id=element_count,
+                            is_part_of_aromatic_chain=char.islower(),
+                        )
+                    )
                     element_count += 1
 
         return nodes, edges
 
 
-new_mol = Molecule("N")
+new_mol = Molecule("CC1(CCCCC1)O")
 print(new_mol.nodes)
