@@ -34,5 +34,8 @@
   },
   "B": {
     "possible_num_bonds": 3
+  },
+  "*": {
+    "possible_num_bonds": 0
   }
 }
